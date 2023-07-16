@@ -2,7 +2,7 @@
 
 Goal : 하루 일정을 추가할 수 있고, 그 일정에 대한 소감을 작성할 수 있는 API를 만든다.
 
-사용 기술 : JAVA, Spring Boot, MariaDB
+사용 기술 : JAVA, Spring Boot, MariaDB, Docker, SMTP
 
 ***
 # 프로그램 주요 기능
