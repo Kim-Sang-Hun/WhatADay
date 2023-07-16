@@ -33,4 +33,4 @@ Goal : 하루 일정을 추가할 수 있고, 그 일정에 대한 소감을 작
 ***
 # ERD(Entity Relationship Diagram)
 
-![WhatADay](https://github.com/Sanghun77/WhatADay/assets/119822465/da07e192-bbb9-4461-8c36-67190a7c54b7)
+![WhatADayERD](https://github.com/Sanghun77/WhatADay/assets/119822465/cb16bb39-ba86-45bd-85e2-8e1f2581e97d)
