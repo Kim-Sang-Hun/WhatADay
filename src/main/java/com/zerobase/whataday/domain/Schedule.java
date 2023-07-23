@@ -23,8 +23,9 @@ public class Schedule extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private Long userId;
+  private double latitude;
+  private double longitude;
+  private String datetime;
   private String title;
   private String description;
-  private String address;
-  private String datetime;
 }
