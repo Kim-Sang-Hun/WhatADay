@@ -1,5 +1,7 @@
-package com.zerobase.whataday.domain;
+package com.zerobase.whataday.schedule.domain;
 
+import com.zerobase.whataday.domain.BaseEntity;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,5 +28,5 @@ public class Schedule extends BaseEntity {
   private String title;
   private String description;
   private String address;
-  private String datetime;
+  private LocalDateTime datetime;
 }
