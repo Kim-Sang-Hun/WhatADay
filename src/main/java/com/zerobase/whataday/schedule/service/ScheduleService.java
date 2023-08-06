@@ -5,9 +5,9 @@ import com.zerobase.whataday.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 public class ScheduleService {
 
   private final ScheduleRepository scheduleRepository;
+  private final JavaMailSender javaMailSender;
+
+  @Value("${mail.myMailAddress}")
+  private String myMailAddress;
 
   public boolean addSchedule(Schedule schedule) {
 
@@ -28,27 +32,37 @@ public class ScheduleService {
     return true;
   }
 
+  /**
+   *@param localDateTime 을 이용해서 한 시간 뒤에 시작하는 스케쥴을 찾아오고
+   *                     그에 대한 알람을 보내준다.
+   * 이 때 메일의 내용에는 장소, 스케쥴 제목, 스케쥴 설명이 들어가 있다.
+   */
   public void sendEmailOneHourAfter(LocalDateTime localDateTime) {
 
     List<Schedule> list = scheduleRepository.findSchedulesByDatetime(localDateTime);
-    if (list == null) {
+
+    if (list.isEmpty()) {
       return;
     }
 
-    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    SimpleMailMessage mail = new SimpleMailMessage();
 
     try {
-      String[] receiveList = new String[list.size()];
-      for (int i = 0; i < receiveList.length; i++) {
-        receiveList[i] = list.get(i).getUser().getEmail();
+      mail.setFrom(myMailAddress);
+      mail.setSubject("일정 시작 한 시간 전입니다.");
+      String location;
+      String title;
+      String description;
+
+      for (int i = 0; i < list.size(); i++) {
+        location = list.get(i).getAddress();
+        title = list.get(i).getTitle();
+        description = list.get(i).getDescription();
+        mail.setTo(list.get(i).getUser().getEmail());
+        mail.setText(location + " 에서 다음 일정이 시작되기까지 한 시간 남았습니다.\n"
+            + title + "\n" + description);
+        javaMailSender.send(mail);
       }
-
-      simpleMailMessage.setTo(receiveList);
-      simpleMailMessage.setSubject("일정 한시간 전입니다.");
-      simpleMailMessage.setText("일정 한시간 전입니다. 늦지 않게 도착해주세요!");
-
-      JavaMailSender sender = new JavaMailSenderImpl();
-      sender.send(simpleMailMessage);
     } catch (Exception e) {
       e.printStackTrace();
     }
