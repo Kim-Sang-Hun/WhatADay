@@ -1,9 +1,10 @@
 package com.zerobase.whataday.schedule;
 
+import com.zerobase.whataday.domain.User;
+import com.zerobase.whataday.exception.ScheduleException;
 import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
 import com.zerobase.whataday.schedule.service.ScheduleService;
-import com.zerobase.whataday.schedule.service.ScheduleServiceImpl;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -22,10 +25,12 @@ public class ScheduleServiceTest {
 
   @MockBean
   ScheduleRepository scheduleRepository;
+  @MockBean
+  JavaMailSender javaMailSender;
 
   @BeforeEach
   void setUp() {
-    scheduleService = new ScheduleServiceImpl(scheduleRepository);
+    scheduleService = new ScheduleService(scheduleRepository, javaMailSender);
   }
 
   @Test
@@ -33,15 +38,16 @@ public class ScheduleServiceTest {
   void addSchedule() {
     //given
     Schedule schedule1 = Schedule.builder()
-        .userId(1L)
+        .user(User.builder().id(1L).build())
         .datetime(LocalDateTime.of(2023, 3, 3, 13, 0))
         .build();
 
-    Mockito.when(scheduleRepository.existsByUserIdAndDatetime(schedule1.getUserId(), schedule1.getDatetime())).thenReturn(true);
+    Mockito.when(scheduleRepository.existsByUserIdAndDatetime(schedule1.getUser().getId(), schedule1.getDatetime())).thenReturn(true);
 
     //when
-    boolean result1 = scheduleService.addSchedule(schedule1);
     //then
-    Assertions.assertFalse(result1);
+    Assertions.assertThrows(ScheduleException.class, () -> {
+      scheduleService.addSchedule(schedule1);
+    });
   }
 }
