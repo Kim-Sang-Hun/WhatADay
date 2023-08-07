@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScheduleController {
 
   private final ScheduleService scheduleService;
-  private final JavaMailSender javaMailSender;
 
   @PostMapping("/submit")
-  public ResponseEntity<?> addSchedule(ScheduleInput scheduleInput) {
+  public ResponseEntity<String> addSchedule(ScheduleInput scheduleInput) {
     Schedule schedule = Schedule.builder()
         .user(scheduleInput.getUser())
         .title(scheduleInput.getTitle())
@@ -32,10 +31,7 @@ public class ScheduleController {
         .datetime(scheduleInput.getDatetime())
         .build();
 
-    if (!scheduleService.addSchedule(schedule)) {
-      return ResponseEntity.badRequest().build();
-    }
-    return ResponseEntity.ok().build();
+    return scheduleService.addSchedule(schedule);
   }
 
   /**

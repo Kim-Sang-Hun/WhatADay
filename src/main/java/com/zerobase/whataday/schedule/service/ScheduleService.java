@@ -1,11 +1,14 @@
 package com.zerobase.whataday.schedule.service;
 
+import com.zerobase.whataday.exception.ScheduleException;
+import com.zerobase.whataday.exception.domain.ErrorCode;
 import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,15 @@ public class ScheduleService {
   @Value("${mail.myMailAddress}")
   private String myMailAddress;
 
-  public boolean addSchedule(Schedule schedule) {
+  public ResponseEntity<String> addSchedule(Schedule schedule) {
 
     // 같은 사람이 같은 시간에 스케쥴을 등록하는 것을 막는다.
     if (scheduleRepository.existsByUserIdAndDatetime(schedule.getUser().getId(),
         schedule.getDatetime())) {
-      return false;
+      throw new ScheduleException("이미 존재하는 스케쥴", ErrorCode.SCHEDULE_ALREADY_EXISTS);
     }
-
     scheduleRepository.save(schedule);
-    return true;
+    return ResponseEntity.ok().build();
   }
 
   /**
