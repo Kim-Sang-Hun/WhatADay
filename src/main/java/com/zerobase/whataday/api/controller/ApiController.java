@@ -1,7 +1,6 @@
-package com.zerobase.whataday.controller;
+package com.zerobase.whataday.api.controller;
 
-
-import com.zerobase.whataday.service.ApiService;
+import com.zerobase.whataday.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class KakaoApiController {
+public class ApiController {
   private final ApiService apiService;
 
   /**

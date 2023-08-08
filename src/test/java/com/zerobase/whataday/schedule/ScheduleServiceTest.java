@@ -1,6 +1,6 @@
 package com.zerobase.whataday.schedule;
 
-import com.zerobase.whataday.domain.User;
+import com.zerobase.whataday.user.domain.User;
 import com.zerobase.whataday.exception.ScheduleException;
 import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
