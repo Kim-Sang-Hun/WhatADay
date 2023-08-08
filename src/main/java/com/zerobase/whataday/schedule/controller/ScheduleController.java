@@ -34,6 +34,11 @@ public class ScheduleController {
     return scheduleService.findScheduleNotDone(userId);
   }
 
+  @PostMapping("/done")
+  public ResponseEntity<String> doSchedule(@RequestBody Long scheduleId) {
+    return scheduleService.updateScheduleDone(scheduleId);
+  }
+
   /**
    * 스케쥴러를 이용해 1분마다 한 시간 뒤에 시작하는 일정에 대해 메일을 보냅니다.
    */

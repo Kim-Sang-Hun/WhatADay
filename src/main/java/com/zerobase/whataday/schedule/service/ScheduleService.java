@@ -6,6 +6,7 @@ import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class ScheduleService {
 
     List<Schedule> list = scheduleRepository.findByUserIdAndDoneOrderByStartTime(userId, false);
     if (list.isEmpty()) {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.badRequest().build();
     }
 
     return ResponseEntity.ok().body(list);
@@ -84,5 +85,17 @@ public class ScheduleService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public ResponseEntity<String> updateScheduleDone(Long scheduleId) {
+    Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
+    if (schedule.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    Schedule scheduleFound = schedule.get();
+    scheduleFound.setDone(true);
+    scheduleRepository.updateById(scheduleId, scheduleFound);
+    
+    return ResponseEntity.ok().build();
   }
 }
