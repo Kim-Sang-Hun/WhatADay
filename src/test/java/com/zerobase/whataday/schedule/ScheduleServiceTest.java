@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,10 +38,11 @@ public class ScheduleServiceTest {
     //given
     Schedule schedule1 = Schedule.builder()
         .user(User.builder().id(1L).build())
-        .datetime(LocalDateTime.of(2023, 3, 3, 13, 0))
+        .startTime(LocalDateTime.of(2023, 3, 3, 13, 0))
         .build();
 
-    Mockito.when(scheduleRepository.existsByUserIdAndDatetime(schedule1.getUser().getId(), schedule1.getDatetime())).thenReturn(true);
+    Mockito.when(scheduleRepository.existsByUserIdAndStartTimeBetweenOrEndTimeBetween(schedule1.getUser().getId(), schedule1.getStartTime(), schedule1.getEndTime(),
+        schedule1.getStartTime(), schedule1.getEndTime())).thenReturn(true);
 
     //when
     //then
