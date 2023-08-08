@@ -1,4 +1,4 @@
-package com.zerobase.whataday.service;
+package com.zerobase.whataday.api.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

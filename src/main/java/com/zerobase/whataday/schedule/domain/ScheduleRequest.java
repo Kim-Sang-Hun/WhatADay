@@ -1,6 +1,6 @@
 package com.zerobase.whataday.schedule.domain;
 
-import com.zerobase.whataday.domain.User;
+import com.zerobase.whataday.user.domain.User;
 import java.time.LocalDateTime;
 import lombok.Getter;
 

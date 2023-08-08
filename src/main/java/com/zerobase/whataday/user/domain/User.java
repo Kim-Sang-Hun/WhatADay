@@ -1,5 +1,6 @@
-package com.zerobase.whataday.domain;
+package com.zerobase.whataday.user.domain;
 
+import com.zerobase.whataday.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

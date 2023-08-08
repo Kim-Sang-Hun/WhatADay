@@ -1,4 +1,4 @@
-package com.zerobase.whataday.domain;
+package com.zerobase.whataday.user.domain;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class UserInput {
+public class UserRequest {
 
   private Long Id;
   @NotBlank(message = "이름은 필수 항목입니다.")
