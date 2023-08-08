@@ -38,6 +38,17 @@ public class ScheduleService {
     return ResponseEntity.ok().build();
   }
 
+  @Transactional
+  public ResponseEntity<List<Schedule>> findScheduleNotDone(Long userId) {
+
+    List<Schedule> list = scheduleRepository.findByUserIdAndDoneOrderByStartTime(userId, false);
+    if (list.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok().body(list);
+  }
+
   /**
    *@param localDateTime 을 이용해서 한 시간 뒤에 시작하는 스케쥴을 찾아오고
    *                     그에 대한 알람을 보내준다.
@@ -46,7 +57,7 @@ public class ScheduleService {
   @Transactional(readOnly = true)
   public void sendEmailOneHourAfter(LocalDateTime localDateTime) {
 
-    List<Schedule> list = scheduleRepository.findSchedulesByStartTime(localDateTime);
+    List<Schedule> list = scheduleRepository.findByStartTime(localDateTime);
 
     if (list.isEmpty()) {
       return;

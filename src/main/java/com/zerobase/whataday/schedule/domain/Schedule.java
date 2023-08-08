@@ -41,6 +41,7 @@ public class Schedule extends BaseEntity {
   private LocalDateTime startTime;
   @NotBlank(message = "종료 시간은 필수 입력 항목입니다.")
   private LocalDateTime endTime;
+  private boolean isDone;
 
   public static Schedule from(ScheduleRequest scheduleRequest) {
     return Schedule.builder()
@@ -50,6 +51,7 @@ public class Schedule extends BaseEntity {
         .address(scheduleRequest.getAddress())
         .startTime(scheduleRequest.getStartTime())
         .endTime(scheduleRequest.getEndTime())
+        .isDone(false)
         .build();
   }
 

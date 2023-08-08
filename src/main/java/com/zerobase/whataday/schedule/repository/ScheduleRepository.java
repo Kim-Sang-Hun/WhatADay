@@ -9,5 +9,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
   boolean existsByUserIdAndStartTimeBetweenOrEndTimeBetween(Long userId,
       LocalDateTime startTime1, LocalDateTime endTime1,
       LocalDateTime startTime2, LocalDateTime endTime2);
-  List<Schedule> findSchedulesByStartTime(LocalDateTime localDateTime);
+  List<Schedule> findByStartTime(LocalDateTime localDateTime);
+  List<Schedule> findByUserIdAndDoneOrderByStartTime(Long userId, boolean done);
 }
