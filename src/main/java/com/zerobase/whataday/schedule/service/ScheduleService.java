@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,14 @@ public class ScheduleService {
   @Value("${mail.myMailAddress}")
   private String myMailAddress;
 
+  @Transactional
   public ResponseEntity<String> addSchedule(Schedule schedule) {
 
     // 같은 사람이 같은 시간에 스케쥴을 등록하는 것을 막는다.
-    if (scheduleRepository.existsByUserIdAndDatetime(schedule.getUser().getId(),
-        schedule.getDatetime())) {
+    if (scheduleRepository.existsByUserIdAndStartTimeBetweenOrEndTimeBetween(schedule.getUser().getId(),
+        schedule.getStartTime(), schedule.getEndTime(),
+        schedule.getStartTime(), schedule.getEndTime())
+    ) {
       throw new ScheduleException("이미 존재하는 스케쥴", ErrorCode.SCHEDULE_ALREADY_EXISTS);
     }
     scheduleRepository.save(schedule);
@@ -39,9 +43,10 @@ public class ScheduleService {
    *                     그에 대한 알람을 보내준다.
    * 이 때 메일의 내용에는 장소, 스케쥴 제목, 스케쥴 설명이 들어가 있다.
    */
+  @Transactional(readOnly = true)
   public void sendEmailOneHourAfter(LocalDateTime localDateTime) {
 
-    List<Schedule> list = scheduleRepository.findSchedulesByDatetime(localDateTime);
+    List<Schedule> list = scheduleRepository.findSchedulesByStartTime(localDateTime);
 
     if (list.isEmpty()) {
       return;

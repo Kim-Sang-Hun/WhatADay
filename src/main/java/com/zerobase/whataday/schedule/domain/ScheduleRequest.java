@@ -5,10 +5,11 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class ScheduleInput {
+public class ScheduleRequest {
   private User user;
   private String title;
   private String description;
   private String address;
-  private LocalDateTime datetime;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
 }
