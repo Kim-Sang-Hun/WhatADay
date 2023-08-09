@@ -6,6 +6,7 @@ import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,17 @@ public class ScheduleService {
     return ResponseEntity.ok().build();
   }
 
+  @Transactional
+  public ResponseEntity<List<Schedule>> findScheduleNotDone(Long userId) {
+
+    List<Schedule> list = scheduleRepository.findByUserIdAndDoneOrderByStartTime(userId, false);
+    if (list.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    return ResponseEntity.ok().body(list);
+  }
+
   /**
    *@param localDateTime 을 이용해서 한 시간 뒤에 시작하는 스케쥴을 찾아오고
    *                     그에 대한 알람을 보내준다.
@@ -46,7 +58,7 @@ public class ScheduleService {
   @Transactional(readOnly = true)
   public void sendEmailOneHourAfter(LocalDateTime localDateTime) {
 
-    List<Schedule> list = scheduleRepository.findSchedulesByStartTime(localDateTime);
+    List<Schedule> list = scheduleRepository.findByStartTime(localDateTime);
 
     if (list.isEmpty()) {
       return;
@@ -73,5 +85,17 @@ public class ScheduleService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public ResponseEntity<String> updateScheduleDone(Long scheduleId) {
+    Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
+    if (schedule.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    Schedule scheduleFound = schedule.get();
+    scheduleFound.setDone(true);
+    scheduleRepository.updateById(scheduleId, scheduleFound);
+    
+    return ResponseEntity.ok().build();
   }
 }
