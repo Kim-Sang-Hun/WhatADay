@@ -30,4 +30,12 @@ public class User extends BaseEntity {
   private String password;
   private String email;
   private boolean isVerifiedByEmail;
+
+  public static User from(UserRequest userRequest) {
+
+    return User.builder().name(userRequest.getName())
+        .email(userRequest.getEmail())
+        .password(userRequest.getPassword())
+        .build();
+  }
 }

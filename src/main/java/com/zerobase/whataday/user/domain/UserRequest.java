@@ -11,8 +11,6 @@ import lombok.ToString;
 @ToString
 @Builder
 public class UserRequest {
-
-  private Long Id;
   @NotBlank(message = "이름은 필수 항목입니다.")
   private String name;
   @Size(min = 4, message = "비밀번호는 4자 이상 입력해야 합니다.")
