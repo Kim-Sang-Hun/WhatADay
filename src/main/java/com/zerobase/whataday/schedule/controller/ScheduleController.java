@@ -42,7 +42,7 @@ public class ScheduleController {
   /**
    * 스케쥴러를 이용해 1분마다 한 시간 뒤에 시작하는 일정에 대해 메일을 보냅니다.
    */
-  @Scheduled(cron = "* 0/1 * * * *")
+  @Scheduled(cron = "0 * * * * *")
   public void sendEmail() {
     scheduleService.sendEmailOneHourAfter(LocalDateTime.now().plusHours(1));
   }
