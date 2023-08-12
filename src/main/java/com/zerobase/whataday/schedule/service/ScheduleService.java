@@ -94,7 +94,7 @@ public class ScheduleService {
     }
     Schedule scheduleFound = schedule.get();
     scheduleFound.setDone(true);
-    scheduleRepository.updateById(scheduleId, scheduleFound);
+    scheduleRepository.save(scheduleFound);
     
     return ResponseEntity.ok().build();
   }
