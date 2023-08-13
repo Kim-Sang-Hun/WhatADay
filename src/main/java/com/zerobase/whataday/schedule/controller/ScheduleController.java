@@ -34,9 +34,9 @@ public class ScheduleController {
     return scheduleService.findScheduleNotDone(userId);
   }
 
-  @PostMapping("/done")
-  public ResponseEntity<String> doSchedule(@RequestBody Long scheduleId) {
-    return scheduleService.updateScheduleDone(scheduleId);
+  @Scheduled(cron = "0 * * * * *")
+  public void doSchedule() {
+    scheduleService.updateScheduleDone(LocalDateTime.now());
   }
 
   /**

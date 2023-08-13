@@ -10,5 +10,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
       LocalDateTime startTime1, LocalDateTime endTime1,
       LocalDateTime startTime2, LocalDateTime endTime2);
   List<Schedule> findByStartTime(LocalDateTime localDateTime);
+  List<Schedule> findByEndTime(LocalDateTime localDateTime);
+
   List<Schedule> findByUserIdAndDoneOrderByStartTime(Long userId, boolean Done);
 }
