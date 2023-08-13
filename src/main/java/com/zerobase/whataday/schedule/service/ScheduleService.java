@@ -87,15 +87,12 @@ public class ScheduleService {
     }
   }
 
-  public ResponseEntity<String> updateScheduleDone(Long scheduleId) {
-    Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
-    if (schedule.isEmpty()) {
-      return ResponseEntity.badRequest().build();
+  public void updateScheduleDone(LocalDateTime localDateTime) {
+    List<Schedule> schedule = scheduleRepository.findByEndTime(localDateTime);
+
+    for (Schedule scheduleFound : schedule) {
+      scheduleFound.setDone(true);
+      scheduleRepository.save(scheduleFound);
     }
-    Schedule scheduleFound = schedule.get();
-    scheduleFound.setDone(true);
-    scheduleRepository.save(scheduleFound);
-    
-    return ResponseEntity.ok().build();
   }
 }
