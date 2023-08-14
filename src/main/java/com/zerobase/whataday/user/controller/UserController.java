@@ -1,6 +1,5 @@
 package com.zerobase.whataday.user.controller;
 
-import com.zerobase.whataday.user.domain.User;
 import com.zerobase.whataday.user.domain.UserRequest;
 import com.zerobase.whataday.user.service.UserService;
 import javax.validation.Valid;
