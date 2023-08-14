@@ -5,6 +5,7 @@ import com.zerobase.whataday.schedule.domain.ScheduleRequest;
 import com.zerobase.whataday.schedule.service.ScheduleService;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,7 +24,7 @@ public class ScheduleController {
   private final ScheduleService scheduleService;
 
   @PostMapping("/submit")
-  public ResponseEntity<String> addSchedule(@RequestBody ScheduleRequest scheduleRequest) {
+  public ResponseEntity<String> addSchedule(@RequestBody @Valid ScheduleRequest scheduleRequest) {
     Schedule schedule = Schedule.from(scheduleRequest);
 
     return scheduleService.addSchedule(schedule);

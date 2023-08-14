@@ -4,6 +4,8 @@ import com.zerobase.whataday.exception.ScheduleException;
 import com.zerobase.whataday.exception.domain.ErrorCode;
 import com.zerobase.whataday.schedule.domain.Schedule;
 import com.zerobase.whataday.schedule.repository.ScheduleRepository;
+import com.zerobase.whataday.user.domain.User;
+import com.zerobase.whataday.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ScheduleService {
 
+  private final UserRepository userRepository;
   private final ScheduleRepository scheduleRepository;
   private final JavaMailSender javaMailSender;
 
@@ -29,7 +32,7 @@ public class ScheduleService {
   public ResponseEntity<String> addSchedule(Schedule schedule) {
 
     // 같은 사람이 같은 시간에 스케쥴을 등록하는 것을 막는다.
-    if (scheduleRepository.existsByUserIdAndStartTimeBetweenOrEndTimeBetween(schedule.getUser().getId(),
+    if (scheduleRepository.existsByUserIdAndStartTimeBetweenOrEndTimeBetween(schedule.getUserId(),
         schedule.getStartTime(), schedule.getEndTime(),
         schedule.getStartTime(), schedule.getEndTime())
     ) {
@@ -74,13 +77,17 @@ public class ScheduleService {
       String description;
 
       for (int i = 0; i < list.size(); i++) {
-        location = list.get(i).getAddress();
-        title = list.get(i).getTitle();
-        description = list.get(i).getDescription();
-        mail.setTo(list.get(i).getUser().getEmail());
-        mail.setText(location + " 에서 다음 일정이 시작되기까지 한 시간 남았습니다.\n"
-            + title + "\n" + description);
-        javaMailSender.send(mail);
+        Optional<User> user = userRepository.findById(list.get(i).getUserId());
+        if (user.isPresent()) {
+          location = list.get(i).getAddress();
+          title = list.get(i).getTitle();
+          description = list.get(i).getDescription();
+          mail.setTo(user.get().getEmail());
+          mail.setText(location + " 에서 다음 일정이 시작되기까지 한 시간 남았습니다.\n"
+              + title + "\n" + description);
+          javaMailSender.send(mail);
+        }
+
       }
     } catch (Exception e) {
       e.printStackTrace();
